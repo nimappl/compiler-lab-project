@@ -7,7 +7,8 @@
 
 #define VALID 1000
 #define INVALID 1001
-#define PARSER 13
+#define PARSER 1003
+#define CALCULATOR 1004
 
 typedef struct {
     enum { TT_NULL, TT_NUMBER, TT_OPERATOR, TT_VARIABLE,
@@ -18,7 +19,7 @@ typedef struct {
         FUNC_SQRT, FUNC_ABS, OBRACK, CBRACK, VAR_E, VAR_PI, VAR_X, TERMINAL, NONE
     } name;
     double value;
-    short presedence;
+    int presedence;
 } token;
 
 typedef struct {
@@ -59,7 +60,8 @@ static const token keywords[] = {
     { TT_NULL, NONE, 0, 0 }             // T_NULL       23
 };
 
-static token final_formula[200];
+extern token final_formula[200];
+extern char var;
 
 void push(token, tstack *);
 token pop(tstack *);
@@ -68,7 +70,7 @@ int err(int, char *);
 int is_valid_number(char *);
 int determine_type(char input[], int index, int var);
 void to_postfix_notation(token formula[]);
-bool is_mathematically_valid(token formula[]);
-double calculate_for(token formula[], double var);
-double calculate(int operation, double operand1, double operand2);
-void pirnt_expr(token expr[]);
+bool is_mathematically_valid();
+token calculate_for(double value, bool verbose);
+token calculate(token operation, double operand1, double operand2, bool verbose);
+void print_expr(token expr[]);

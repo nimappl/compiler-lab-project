@@ -1,11 +1,12 @@
 #include "main.h"
 
 #define OP_CONDITION(x) (x.type == TT_NUMBER || x.type == TT_VARIABLE || x.name == CBRACK)
+char var;
 
 int lex(char input_string[], token formula[])
 {
     int i, f, f_index = 0, counter = 0, counter2 = 0;
-    char temp[20], var;
+    char temp[20];
     token previous_token;
     previous_token = keywords[T_NULL];
 
@@ -41,7 +42,7 @@ int lex(char input_string[], token formula[])
                 current_token.type = TT_NUMBER;
                 current_token.value = atof(temp);
             } else {
-                return err(PARSER, "invalid formula. (3)");
+                return err(PARSER, "invalid formula. (1)");
             }
         } else if (input_string[i] == '+' && OP_CONDITION(previous_token)) current_token = keywords[T_ADD];
         else if (input_string[i] == '-' && OP_CONDITION(previous_token)) current_token = keywords[T_SUB];
@@ -60,7 +61,7 @@ int lex(char input_string[], token formula[])
             if (type > 0)
                 current_token = keywords[type];
             else
-                return err(PARSER, "invalid formula. (4)");
+                return err(PARSER, "invalid formula. (2)");
 
             if ((current_token.type == TT_VARIABLE || current_token.type == TT_FUNCTION) && OP_CONDITION(previous_token)) {
                 formula[f_index] = keywords[T_MUL];
@@ -94,8 +95,10 @@ int lex(char input_string[], token formula[])
         } else if (input_string[i] == ';' && OP_CONDITION(previous_token) && input_string[i + 1] == '\0') {
             current_token = keywords[T_TERMINAL];
         } else {
-            return err(PARSER, "invalid formula. (5)");
+            return err(PARSER, "invalid formula. (3)");
         }
+
+        if (input_string[i + 1] == '\0' && input_string[i] != ';') err(PARSER, "your function should end with a semicolon (;).");
 
         previous_token = keywords[T_NULL];
         previous_token = current_token;
@@ -132,6 +135,7 @@ int is_valid_number(char *s)
     return 1;
 }
 
+// determines the type of token based on its first character.
 int determine_type(char input[], int index, int xvar)
 {
     int i;
@@ -159,28 +163,3 @@ int determine_type(char input[], int index, int xvar)
     return 0;
 }
 
-    // if (input[index] == 's') {
-    //     if (strcmp(s4, "sin(") == 0) return T_SIN;
-    //     else if (strcmp(s4, "sec(") == 0) return T_SEC;
-    //     else if (strcmp(s5, "sqrt(") == 0) return T_SQRT;
-    //     else if (xvar == 's') return T_VAR_X;
-    // } else if (input[index] == 'c') {
-    //     if (strcmp(s4, "cos(") == 0) return T_COS;
-    //     else if (strcmp(s4, "cot(") == 0) return T_COT;
-    //     else if (strcmp(s4, "csc(") == 0) return T_CSC;
-    //     else if (xvar == 'c') return T_VAR_X;
-    // } else if (input[index] == 't') {
-    //     if (strcmp(s4, "tan(") == 0) return T_TAN;
-    //     else if (xvar == 't') return T_VAR_X;
-    // } else if (input[index] == 'l') {
-    //     if (strcmp(s3, "ln(") == 0) return T_LN;
-    //     else if (strcmp(s4, "log(") == 0) return T_LOG;
-    //     else if (xvar == 'l') return T_VAR_X;
-    // } else if (input[index] == 'p') {
-    //     if (input[index + 1] == 'i') return T_VAR_PI;
-    //     else if (xvar == 'p') return T_VAR_X;
-    // } else if (input[index] == 'e') {
-    //     return T_VAR_E;
-    // } else if (input[index] == xvar) {
-    //     return T_VAR_X;
-    // }

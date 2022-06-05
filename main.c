@@ -1,5 +1,6 @@
 #include "main.h"
 
+token final_formula[200];
 int formula_status = INVALID;
 
 int main(int argc, char *argv[])
@@ -8,6 +9,7 @@ int main(int argc, char *argv[])
     test_stack.top = -1;
     char input[200];
     token formula[200];
+    double value;
 
     while (formula_status == INVALID)
     {
@@ -24,12 +26,21 @@ int main(int argc, char *argv[])
         }
 
         input[i] = '\0';
-
         formula_status = lex(input, formula);
     }
 
-    if(formula_status == VALID)
-        pirnt_expr(formula);
+    if(formula_status == VALID) to_postfix_notation(formula);
+    if (is_mathematically_valid()) {
+        token result;
+        printf("Enter a value for %c: ", var);
+        scanf("%lf", &value);
+
+        result = calculate_for(value, true);
+
+        if (result.type != TT_NULL) printf("Result: %lf", result.value);
+    } else {
+        printf("Function is not mathematically valid.\n\n");
+    }
 
     return 0;
 }
@@ -53,10 +64,13 @@ int err(int type, char *message)
         printf("Parse Error: %s\n\n", message);
         return INVALID;
     }
+
+    printf("Calculation Error: %s\n\n", message);
+    return INVALID;
 }
 
 // For test purposes
-void pirnt_expr(token expr[])
+void print_expr(token expr[])
 {
     int i;
     for (i = 0; expr[i].type != TT_TERMINAL; i++) {

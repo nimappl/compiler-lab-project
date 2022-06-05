@@ -3,6 +3,11 @@
 #define OP_CONDITION(x) (x.type == TT_NUMBER || x.type == TT_VARIABLE || x.name == CBRACK)
 char var;
 
+/*
+    Analyzes input string character by character, identifies tokens and checks their validity
+    based on previously identified token. input will be parsed into a array of type token for
+    further processing, if the input is syntactically valid.
+*/
 int lex(char input_string[], token formula[])
 {
     int i, f, f_index = 0, counter = 0, counter2 = 0;

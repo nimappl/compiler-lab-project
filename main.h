@@ -27,7 +27,7 @@ typedef struct {
     int top;
 } tstack;
 
-enum {
+static enum {
     T_ADD, T_SUB, T_MUL, T_DIV, T_MOD, T_POW, T_SIN, T_COS, T_TAN, T_COT,
     T_SEC, T_CSC, T_NEG, T_ABS, T_LOG, T_LN, T_SQRT, T_OBRACK, T_CBRACK,
     T_VAR_E, T_VAR_PI, T_VAR_X, T_TERMINAL, T_NULL

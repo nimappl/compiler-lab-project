@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
     {
         int c, i = 0;
 
-        printf("Enter a Function: ");
+        printf("Enter a function: ");
 
         while ((c = getchar()) != '\n')
         {
@@ -69,7 +69,7 @@ int err(int type, char *message)
     return INVALID;
 }
 
-// For test purposes
+// For debugging purposes
 void print_expr(token expr[])
 {
     int i;

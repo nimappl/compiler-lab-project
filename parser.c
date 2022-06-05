@@ -21,8 +21,8 @@ int lex(char input_string[], token formula[])
     var = input_string[2];
     counter = 0;
 
-    if (var == 'e' || var == '+' || var == '-' || var == '*' || var == '/' || var == '^' || var == '%' || var == '(' || var == ')' || var == '|' || var == '.' || isdigit(var))
-        return err(PARSER, "\"+\", \"-\", \"*\", \"/\", \"^\", \"%%\", \"(\", \")\", \"|\", \"e\", \".\" and 0-9 digits cannot be used as variable name.");
+    if (var == 'e' || var == '+' || var == '-' || var == '*' || var == '/' || var == '^' || var == '%' || var == '(' || var == ')' || var == '|' || var == '.' || var == ';' || isdigit(var))
+        return err(PARSER, "\"+\", \"-\", \"*\", \"/\", \"^\", \"%\", \"(\", \")\", \"|\", \"e\", \".\", \";\" and 0-9 digits cannot be used as variable name.");
 
     for (i = 5; input_string[i] != '\0'; i++)
     {
@@ -129,15 +129,15 @@ int lex(char input_string[], token formula[])
     return VALID;
 }
 
-int is_valid_number(char *s)
+bool is_valid_number(char *s)
 {
     int i, dot_points;
     for (i = 1; s[i] == '\0'; i++) if (s[i] == '.') dot_points++;
 
     if (dot_points > 1)
-        return -1;
+        return false;
     
-    return 1;
+    return true;
 }
 
 // determines the type of token based on its first character.

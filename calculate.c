@@ -27,7 +27,8 @@ void to_postfix_notation(token formula[])
                 if (formula[i].presedence > stack.s[stack.top].presedence)
                     push(formula[i], &stack);
                 else {
-                    while (stack.top != -1 && formula[i].presedence < stack.s[stack.top].presedence + 1) //this doesn't work as expected, hence the last +1 :-| might cause bugs
+                    //this doesn't work as expected, hence the last +1
+                    while (stack.top != -1 && formula[i].presedence < stack.s[stack.top].presedence + 1)
                     {
                         final_formula[j] = pop(&stack);
                         j++;
@@ -123,11 +124,13 @@ token calculate_for(double value, bool verbose)
             push(result, &stack);
         }
         
+        // for debugging //
         // if (stack.top < -1) printf("%d) stack top = %d\n", i, stack.top);
         // else if (stack.top == -1) printf("%d) stack is empty\n", i);
         // else {
         //     for (int k = 0; k <= stack.top; k++)
-        //         printf("%d) { %d, %d, %f, %d }\n", i, stack.s[k].type, stack.s[k].name, stack.s[k].value, stack.s[k].presedence);
+        //         printf("%d) { %d, %d, %f, %d }\n", i, stack.s[k].type,
+        //                stack.s[k].name, stack.s[k].value, stack.s[k].presedence);
         // }
     }
 

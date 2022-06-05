@@ -67,7 +67,7 @@ void push(token, tstack *);
 token pop(tstack *);
 int lex(char input_string[], token formula[]);
 int err(int, char *);
-int is_valid_number(char *);
+bool is_valid_number(char *);
 int determine_type(char input[], int index, int var);
 void to_postfix_notation(token formula[]);
 bool is_mathematically_valid();

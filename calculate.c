@@ -55,7 +55,7 @@ void to_postfix_notation(token formula[])
 }
 
 /*
-    Tests the formula of the function for numbers 0-20.
+    Tests the formula of the function for 81 numbers between -400 and 400.
     returns false if all fail, which indicates that the formula is mathematically vague,
     regardless of value given as independant variable.
 */
@@ -64,10 +64,9 @@ bool is_mathematically_valid()
     int counter = 0;
     token result;
 
-    for (double i = 0; i < 21; i++)
+    for (double i = -400; i < 400; i+=10)
     {
-        result = calculate_for(i, false);
-
+        result = calculate_for(i, false, RADIAN);
         if (result.type == TT_NULL) counter++;
         if (result.name == T_TERMINAL) {
             err(CALCULATOR, "formula is invalid (4)");
@@ -75,7 +74,7 @@ bool is_mathematically_valid()
         }
     }
 
-    return (counter == 21) ? err(CALCULATOR, "Function is not mathematically valid.") : true;
+    return (counter == 81) ? err(CALCULATOR, "Function is not mathematically valid.") : true;
 }
 
 /*
@@ -85,7 +84,7 @@ bool is_mathematically_valid()
     TT_NULL if the formula is mathematically vague for given value as independant variable.
     TT_NULL with name parameter of TERMINAL if stack is not empty at the end.
 */
-token calculate_for(double value, bool verbose)
+token calculate_for(double value, bool verbose, int trig_format)
 {
     tstack stack;
     stack.top = -1;
@@ -107,7 +106,7 @@ token calculate_for(double value, bool verbose)
             op = final_formula[i];
             operand2 = pop(&stack);
             operand1 = pop(&stack);
-            result = calculate(op, operand1.value, operand2.value, verbose);
+            result = calculate(op, operand1.value, operand2.value, verbose, trig_format);
 
             if (result.type == TT_NULL) return result;
             push(result, &stack);
@@ -116,7 +115,7 @@ token calculate_for(double value, bool verbose)
             token func = final_formula[i], result = { TT_NUMBER, NUM, 0, 0 };
             token operand = pop(&stack);
 
-            result = calculate(func, operand.value, 0, verbose);
+            result = calculate(func, operand.value, 0, verbose, trig_format);
 
             if (result.type == TT_NULL) return result;
 
@@ -142,15 +141,14 @@ token calculate_for(double value, bool verbose)
     Returns TT_NULL if the formula is mathematically vague for given values.
     Shows errors if verbose is set to "true".
 */
-token calculate(token operation, double operand1, double operand2, bool verbose)
+token calculate(token operation, double operand1, double operand2, bool verbose, int trig_format)
 {
     token result = { TT_NUMBER, NUM, 0, 0 }, vague = { TT_NULL, NONE, 0, 0 };
-    double operand_deg = operand1;
     
     switch(operation.name)
     {
         case FUNC_SIN: case FUNC_COS: case FUNC_TAN: case FUNC_COT: case FUNC_SEC: case FUNC_CSC:
-            operand1 = operand1 * M_PI / 180;
+            if(trig_format == DEG) operand1 = operand1 * M_PI / 180; // Convert degree to radian
             break;
     }
 
@@ -182,25 +180,25 @@ token calculate(token operation, double operand1, double operand2, bool verbose)
             case FUNC_SIN: result.value = sin(operand1); break;
             case FUNC_COS: result.value = cos(operand1); break;
             case FUNC_TAN:
-                if (IS_COS_ZERO(operand_deg)) {
+                if (IS_COS_ZERO(operand1)) {
                     if (verbose) err(CALCULATOR, "Tangent is infinity for given value.");
                     result = vague;;
                 } else result.value = tan(operand1);
                 break;
             case FUNC_COT:
-                if (IS_SIN_ZERO(operand_deg)) {
+                if (IS_SIN_ZERO(operand1)) {
                     if (verbose) err(CALCULATOR, "Cotangent is infinity for given value.");
                     result = vague;;
                 } else result.value = cos(operand1) / sin(operand1);
                 break;
             case FUNC_SEC:
-                if (IS_COS_ZERO(operand_deg)) {
+                if (IS_COS_ZERO(operand1)) {
                     if (verbose) err(CALCULATOR, "Secant is infinity for given value.");
                     result = vague;;
                 } else result.value = 1 / cos(operand1);
                 break;
             case FUNC_CSC:
-                if (IS_SIN_ZERO(operand_deg)) {
+                if (IS_SIN_ZERO(operand1)) {
                     if (verbose) err(CALCULATOR, "Cosecant is infinity for given value.");
                     result = vague;;
                 } else result.value = 1 / sin(operand1);
@@ -228,5 +226,5 @@ token calculate(token operation, double operand1, double operand2, bool verbose)
         }
     }
 
-    return result;
+    return (result.value == INFINITY || result.value == NAN) ? vague : result;
 }

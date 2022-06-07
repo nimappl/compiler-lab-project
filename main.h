@@ -8,6 +8,8 @@
 #define PARSER 1003
 #define CALCULATOR 1004
 #define SDL 1002
+#define RADIAN 1005
+#define DEG 1006
 
 typedef struct {
     enum { TT_NULL, TT_NUMBER, TT_OPERATOR, TT_VARIABLE,
@@ -25,6 +27,11 @@ typedef struct {
     token s[100];
     int top;
 } tstack;
+
+typedef struct {
+    int x;
+    int y;
+} point;
 
 static enum {
     T_ADD, T_SUB, T_MUL, T_DIV, T_MOD, T_POW, T_SIN, T_COS, T_TAN, T_COT,
@@ -66,11 +73,12 @@ void push(token, tstack *);
 token pop(tstack *);
 bool lex(char input_string[], token formula[]);
 bool err(int, char *);
-bool is_valid_number(char *);
+bool is_valid_number(char []);
 int determine_type(char input[], int index, int var);
 void to_postfix_notation(token formula[]);
 bool is_mathematically_valid();
-token calculate_for(double value, bool verbose);
-token calculate(token operation, double operand1, double operand2, bool verbose);
+token calculate_for(double value, bool verbose, int trig_format);
+token calculate(token operation, double operand1, double operand2, bool verbose, int trig_format);
 void print_expr(token expr[]);
 void plot();
+void draw_numbers();

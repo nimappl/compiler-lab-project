@@ -21,3 +21,6 @@ win :
 
 mac :
 	[ ! -d bin/ ] && mkdir bin & ${CC} *.c -I${SDL_INCLUDE_MAC} -L${SDL_LIB_MAC} -lSDL2 -lm -o bin/nmplotter
+
+parseronly :
+	[ ! -d bin/ ] && mkdir bin & ${CC} *.c -lm -o bin/nmparser

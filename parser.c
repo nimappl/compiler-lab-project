@@ -129,10 +129,10 @@ bool lex(char input_string[], token formula[])
     return true;
 }
 
-bool is_valid_number(char *s)
+bool is_valid_number(char s[])
 {
-    int i, dot_points;
-    for (i = 1; s[i] == '\0'; i++) if (s[i] == '.') dot_points++;
+    int i, dot_points = 0;
+    for (i = 1; s[i] != '\0'; i++) if (s[i] == '.') dot_points++;
 
     if (dot_points > 1)
         return false;

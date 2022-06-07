@@ -5,15 +5,13 @@ token final_formula[200];
 
 int main(int argc, char *argv[])
 {
-    tstack test_stack;
-    test_stack.top = -1;
-    char input[200];
     token formula[200];
     double value;
     bool valid_formula = false;
 
     while (!valid_formula)
     {
+        char input[200];
         int c, i = 0;
 
         printf("Enter a function: ");
@@ -40,11 +38,10 @@ int main(int argc, char *argv[])
     printf("Enter a value for %c: ", var);
     scanf("%lf", &value);
 
-    result = calculate_for(value, true);
-    printf("Result: %lf", result.value);
+    result = calculate_for(value, true, DEG);
+    if (result.type != TT_NULL) printf("Result: %lf\n", result.value);
 
-    plot();
-    
+    plot(); 
 
     return 0;
 }

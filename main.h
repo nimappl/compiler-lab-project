@@ -5,10 +5,9 @@
 #include <math.h>
 #include <string.h>
 
-#define VALID 1000
-#define INVALID 1001
 #define PARSER 1003
 #define CALCULATOR 1004
+#define SDL 1002
 
 typedef struct {
     enum { TT_NULL, TT_NUMBER, TT_OPERATOR, TT_VARIABLE,
@@ -65,8 +64,8 @@ extern char var;
 
 void push(token, tstack *);
 token pop(tstack *);
-int lex(char input_string[], token formula[]);
-int err(int, char *);
+bool lex(char input_string[], token formula[]);
+bool err(int, char *);
 bool is_valid_number(char *);
 int determine_type(char input[], int index, int var);
 void to_postfix_notation(token formula[]);
@@ -74,3 +73,4 @@ bool is_mathematically_valid();
 token calculate_for(double value, bool verbose);
 token calculate(token operation, double operand1, double operand2, bool verbose);
 void print_expr(token expr[]);
+void plot();

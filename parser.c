@@ -8,7 +8,7 @@ char var;
     based on previously identified token. input will be parsed into a array of type token for
     further processing, if the input is syntactically valid.
 */
-int lex(char input_string[], token formula[])
+bool lex(char input_string[], token formula[])
 {
     int i, f, f_index = 0, counter = 0, counter2 = 0;
     char temp[20];
@@ -126,7 +126,7 @@ int lex(char input_string[], token formula[])
 
     if (counter != counter2) return err(PARSER, "mismatched brackets.");
 
-    return VALID;
+    return true;
 }
 
 bool is_valid_number(char *s)

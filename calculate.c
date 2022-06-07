@@ -75,8 +75,7 @@ bool is_mathematically_valid()
         }
     }
 
-    if (counter == 21) return false;
-    return true;
+    return (counter == 21) ? err(CALCULATOR, "Function is not mathematically valid.") : true;
 }
 
 /*

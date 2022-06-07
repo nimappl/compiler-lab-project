@@ -1,7 +1,7 @@
 #include "main.h"
+#define SDL_MAIN_HANDLED
 
 token final_formula[200];
-int formula_status = INVALID;
 
 int main(int argc, char *argv[])
 {
@@ -10,8 +10,9 @@ int main(int argc, char *argv[])
     char input[200];
     token formula[200];
     double value;
+    bool valid_formula = false;
 
-    while (formula_status == INVALID)
+    while (!valid_formula)
     {
         int c, i = 0;
 
@@ -26,21 +27,24 @@ int main(int argc, char *argv[])
         }
 
         input[i] = '\0';
-        formula_status = lex(input, formula);
+
+        if (lex(input, formula)) {
+            to_postfix_notation(formula);
+            if (is_mathematically_valid()) {
+                valid_formula = true;
+            }
+        }
     }
 
-    if(formula_status == VALID) to_postfix_notation(formula);
-    if (is_mathematically_valid()) {
-        token result;
-        printf("Enter a value for %c: ", var);
-        scanf("%lf", &value);
+    token result;
+    printf("Enter a value for %c: ", var);
+    scanf("%lf", &value);
 
-        result = calculate_for(value, true);
+    result = calculate_for(value, true);
+    printf("Result: %lf", result.value);
 
-        if (result.type != TT_NULL) printf("Result: %lf", result.value);
-    } else {
-        printf("Function is not mathematically valid.\n\n");
-    }
+    plot();
+    
 
     return 0;
 }
@@ -58,15 +62,16 @@ token pop(tstack *stack)
     return temp;
 }
 
-int err(int type, char *message)
+bool err(int type, char *message)
 {
-    if (type == PARSER) {
-        printf("Parse Error: %s\n\n", message);
-        return INVALID;
+    switch(type)
+    {
+        case PARSER: printf("Parse error: %s\n\n", message); break;
+        case CALCULATOR: printf("Calculation error: %s\n\n", message); break;
+        case SDL: printf("SDL error: %s\n\n", message); break;
     }
 
-    printf("Calculation Error: %s\n\n", message);
-    return INVALID;
+    return false;
 }
 
 // For debugging purposes

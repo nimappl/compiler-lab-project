@@ -46,17 +46,17 @@ static const token keywords[] = {
     { TT_OPERATOR, OP_DIV, 0, 2 },      // T_DIV        3
     { TT_OPERATOR, OP_MOD, 0, 3 },      // T_MOD        4
     { TT_OPERATOR, OP_POW, 0, 3 },      // T_POW        5
-    { TT_FUNCTION, FUNC_SIN, 0, 4 },    // T_SIN        6
-    { TT_FUNCTION, FUNC_COS, 0, 4 },    // T_COS        7
-    { TT_FUNCTION, FUNC_TAN, 0, 4 },    // T_TAN        8
-    { TT_FUNCTION, FUNC_COT, 0, 4 },    // T_COT        9
-    { TT_FUNCTION, FUNC_SEC, 0, 4 },    // T_SEC        10
-    { TT_FUNCTION, FUNC_CSC, 0, 4 },    // T_CSC        11
+    { TT_FUNCTION, FUNC_SIN, 0, 5 },    // T_SIN        6
+    { TT_FUNCTION, FUNC_COS, 0, 5 },    // T_COS        7
+    { TT_FUNCTION, FUNC_TAN, 0, 5 },    // T_TAN        8
+    { TT_FUNCTION, FUNC_COT, 0, 5 },    // T_COT        9
+    { TT_FUNCTION, FUNC_SEC, 0, 5 },    // T_SEC        10
+    { TT_FUNCTION, FUNC_CSC, 0, 5 },    // T_CSC        11
     { TT_FUNCTION, FUNC_NEG, 0, 4 },    // T_NEG        12
-    { TT_FUNCTION, FUNC_ABS, 0, 4 },    // T_ABS        13
-    { TT_FUNCTION, FUNC_LOG, 0, 4 },    // T_LOG        14
-    { TT_FUNCTION, FUNC_LN, 0, 4 },     // T_LN         15
-    { TT_FUNCTION, FUNC_SQRT, 0, 4 },   // T_SQRT       16
+    { TT_FUNCTION, FUNC_ABS, 0, 5 },    // T_ABS        13
+    { TT_FUNCTION, FUNC_LOG, 0, 5 },    // T_LOG        14
+    { TT_FUNCTION, FUNC_LN, 0, 5 },     // T_LN         15
+    { TT_FUNCTION, FUNC_SQRT, 0, 5 },   // T_SQRT       16
     { TT_BRACKET, OBRACK, 0, 0 },       // T_OBRACK     17
     { TT_BRACKET, CBRACK, 0, 0 },       // T_CBRACK     18
     { TT_VARIABLE, VAR_E, M_E, 0},      // T_VAR_E      19
@@ -81,4 +81,5 @@ token calculate_for(double value, bool verbose, int trig_format);
 token calculate(token operation, double operand1, double operand2, bool verbose, int trig_format);
 void print_expr(token expr[]);
 void plot();
+void draw_graph();
 void draw_numbers();

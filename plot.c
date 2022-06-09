@@ -74,7 +74,7 @@ void draw_graph()
 
     for (double i = -10; i <= 10; i+=0.02)
     {
-        token result = calculate_for(i, false, RADIAN);
+        token result = calculate_for(i, false);
         if (result.type != TT_NULL) {
             if (result.value < 6 || result.value > -6) {
                 current.x = j;
@@ -104,8 +104,8 @@ void draw_numbers()
     ////////////// Draw numbers for x-axis //////////////
     for (int i = -10; i <= 10; i+=2)
     {
-        SDL_Surface *image_sprite = SDL_LoadBMP("bmp/numbers.bmp");    // change to SDL_LoadBMP("..\\bmp\\numbers.bmp") for windows
-        SDL_Surface *number = SDL_LoadBMP("bmp/empty.bmp");            // change to SDL_LoadBMP("..\\bmp\\empty.bmp") for windows
+        SDL_Surface *image_sprite = SDL_LoadBMP("..\\bmp\\numbers.bmp");    // change to SDL_LoadBMP("..\\bmp\\numbers.bmp") for windows
+        SDL_Surface *number = SDL_LoadBMP("..\\bmp\\empty.bmp");            // change to SDL_LoadBMP("..\\bmp\\empty.bmp") for windows
         if (!image_sprite || !number) err(SDL, (char*)SDL_GetError());
 
         int space = 0;
@@ -151,8 +151,8 @@ void draw_numbers()
     {
         if (i == 0) {pos_difference += 100; continue; }
         int dist = 500;
-        SDL_Surface *image_sprite = SDL_LoadBMP("bmp/numbers.bmp");    // change to SDL_LoadBMP("..\\bmp\\numbers.bmp") for windows
-        SDL_Surface *number = SDL_LoadBMP("bmp/empty.bmp");            // change to SDL_LoadBMP("..\\bmp\\empty.bmp") for windows
+        SDL_Surface *image_sprite = SDL_LoadBMP("..\\bmp\\numbers.bmp");    // change to SDL_LoadBMP("..\\bmp\\numbers.bmp") for windows
+        SDL_Surface *number = SDL_LoadBMP("..\\bmp\\empty.bmp");            // change to SDL_LoadBMP("..\\bmp\\empty.bmp") for windows
         if (!image_sprite || !number) err(SDL, (char*)SDL_GetError());
 
         int space = 0;

@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
     printf("Enter a value for %c: ", var);
     scanf("%lf", &value);
 
-    result = calculate_for(value, true, DEG);
+    result = calculate_for(value, true);
     if (result.type != TT_NULL) printf("Result: %lf\n", result.value);
 
     plot(); 

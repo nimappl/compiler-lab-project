@@ -8,36 +8,39 @@ SDL_Renderer *renderer = NULL;
 void plot()
 {
     SDL_Event e;
-    bool done = false;
+    bool done = false, drawn = false;
 
     if (SDL_Init(SDL_INIT_VIDEO) != 0) err(SDL, (char *)SDL_GetError());
     else {
         win = SDL_CreateWindow("Function Graph", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1000, 600, SDL_WINDOW_SHOWN);
-        renderer = renderer = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
+        renderer  = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
 
         while (!done)
         {
-            // Clear and draw the screen (gives us a clean, black canvas)
-            SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
-            SDL_RenderClear(renderer);
+            if (!drawn) { // There's a memory leak in draw_numbers() so it should be called only once
+                // Clear and draw the screen (gives a clean, black canvas)
+                SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+                SDL_RenderClear(renderer);
 
-            // Draw the grid lines
-            SDL_SetRenderDrawColor(renderer, 10, 10, 10, SDL_ALPHA_OPAQUE);
-            for (int i = 10; i < 1000; i+=10) SDL_RenderDrawLine(renderer, i, 0, i, 600);
-            for (int i = 10; i < 600; i+=10) SDL_RenderDrawLine(renderer, 0, i, 1000, i);
+                // Draw the grid lines
+                SDL_SetRenderDrawColor(renderer, 10, 10, 10, SDL_ALPHA_OPAQUE);
+                for (int i = 10; i < 1000; i+=10) SDL_RenderDrawLine(renderer, i, 0, i, 600);
+                for (int i = 10; i < 600; i+=10) SDL_RenderDrawLine(renderer, 0, i, 1000, i);
 
-            SDL_SetRenderDrawColor(renderer, 30, 30, 30, SDL_ALPHA_OPAQUE);
-            for (int i = 50; i < 1000; i+=50) SDL_RenderDrawLine(renderer, i, 0, i, 600);
-            for (int i = 50; i < 600; i+=50) SDL_RenderDrawLine(renderer, 0, i, 1000, i);
+                SDL_SetRenderDrawColor(renderer, 30, 30, 30, SDL_ALPHA_OPAQUE);
+                for (int i = 50; i < 1000; i+=50) SDL_RenderDrawLine(renderer, i, 0, i, 600);
+                for (int i = 50; i < 600; i+=50) SDL_RenderDrawLine(renderer, 0, i, 1000, i);
 
-            // Draw X and Y axis
-            SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
-            SDL_RenderDrawLine(renderer, 500, 0, 500, 600);
-            SDL_RenderDrawLine(renderer, 0, 300, 1000, 300);
+                // Draw X and Y axis
+                SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
+                SDL_RenderDrawLine(renderer, 500, 0, 500, 600);
+                SDL_RenderDrawLine(renderer, 0, 300, 1000, 300);
 
-            draw_numbers();
+                draw_numbers();
+                drawn = true;
+            }
+            
             SDL_SetRenderDrawColor(renderer, 50, 255, 255, SDL_ALPHA_OPAQUE);
-
             draw_graph();
 
             SDL_RenderPresent(renderer);
@@ -57,7 +60,7 @@ void plot()
     Draw Function's graph
 
     Go through -6 to +6 values, iterating 0.02 units each time, which would equivate to 1 pixel
-    on the rendering surface. every 50 pixels are considered 1 arithmetic unit.
+    on the window surface. every 50 pixels are considered 1 arithmetic unit.
     Calculate the f value every iteration, with the resulting coordinates draw a line from previous point
     to the current, and save the current point for next iteration. for any value if the function
     is undefined, contiuous is set to false, so that at the next defined point we don't draw a line
@@ -101,8 +104,8 @@ void draw_numbers()
     ////////////// Draw numbers for x-axis //////////////
     for (int i = -10; i <= 10; i+=2)
     {
-        SDL_Surface *image_sprite = SDL_LoadBMP("..\\bmp\\numbers.bmp");    // change to SDL_LoadBMP("..\\bmp\\numbers.bmp") for windows
-        SDL_Surface *number = SDL_LoadBMP("..\\bmp\\empty.bmp");            // change to SDL_LoadBMP("..\\bmp\\empty.bmp") for windows
+        SDL_Surface *image_sprite = SDL_LoadBMP("bmp/numbers.bmp");    // change to SDL_LoadBMP("..\\bmp\\numbers.bmp") for windows
+        SDL_Surface *number = SDL_LoadBMP("bmp/empty.bmp");            // change to SDL_LoadBMP("..\\bmp\\empty.bmp") for windows
         if (!image_sprite || !number) err(SDL, (char*)SDL_GetError());
 
         int space = 0;
@@ -148,8 +151,8 @@ void draw_numbers()
     {
         if (i == 0) {pos_difference += 100; continue; }
         int dist = 500;
-        SDL_Surface *image_sprite = SDL_LoadBMP("..\\bmp\\numbers.bmp");    // change to SDL_LoadBMP("..\\bmp\\numbers.bmp") for windows
-        SDL_Surface *number = SDL_LoadBMP("..\\bmp\\empty.bmp");            // change to SDL_LoadBMP("..\\bmp\\empty.bmp") for windows
+        SDL_Surface *image_sprite = SDL_LoadBMP("bmp/numbers.bmp");    // change to SDL_LoadBMP("..\\bmp\\numbers.bmp") for windows
+        SDL_Surface *number = SDL_LoadBMP("bmp/empty.bmp");            // change to SDL_LoadBMP("..\\bmp\\empty.bmp") for windows
         if (!image_sprite || !number) err(SDL, (char*)SDL_GetError());
 
         int space = 0;

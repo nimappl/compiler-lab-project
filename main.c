@@ -9,39 +9,45 @@ int main(int argc, char *argv[])
     double value;
     bool valid_formula = false;
 
-    while (!valid_formula)
+    printf("Parse and plot mathematical functions.\nDeveloped by Nima Kanani and Moharram Moharrami.\n\n");
+    while (1)
     {
-        char input[200];
-        int c, i = 0;
-
-        printf("Enter a function: ");
-
-        while ((c = getchar()) != '\n')
+        while (!valid_formula)
         {
-            if (isalpha(c)) c = tolower(c);
-            if (isspace(c)) continue;
-            input[i] = c;
-            i++;
-        }
+            char input[200];
+            int c, i = 0;
 
-        input[i] = '\0';
+            printf("Enter a function: ");
 
-        if (lex(input, formula)) {
-            to_postfix_notation(formula);
-            if (is_mathematically_valid()) {
-                valid_formula = true;
+            while ((c = getchar()) != '\n')
+            {
+                if (isalpha(c)) c = tolower(c);
+                if (isspace(c)) continue;
+                input[i] = c;
+                i++;
+            }
+            input[i] = '\0';;
+
+            if (lex(input, formula)) {
+                to_postfix_notation(formula);
+                if (is_mathematically_valid()) {
+                    valid_formula = true;
+                }
             }
         }
+
+        token result;
+        printf("Enter a value for %c: ", var);
+        scanf("%lf", &value);
+        getchar();
+
+        result = calculate_for(value, true);
+        if (result.type != TT_NULL) printf("Result: %lf\n\n", result.value);
+
+        plot();
+
+        valid_formula = false;
     }
-
-    token result;
-    printf("Enter a value for %c: ", var);
-    scanf("%lf", &value);
-
-    result = calculate_for(value, true);
-    if (result.type != TT_NULL) printf("Result: %lf\n", result.value);
-
-    plot(); 
 
     return 0;
 }

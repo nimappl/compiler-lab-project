@@ -10,16 +10,16 @@ char var;
 */
 bool lex(char input_string[], token formula[])
 {
-    int i, f, f_index = 0, counter = 0, counter2 = 0;
+    int i, f_index = 0, depth = 0;
     char temp[20];
-    token previous_token;
-    previous_token = keywords[T_NULL];
+    token previous_token = keywords[T_NULL];
+    tstack abs_stack;
+    abs_stack.top = -1;
 
     if (input_string[0] != 'f' || input_string[1] != '(' || input_string[3] != ')' || input_string[4] != '=')
         return err(PARSER, "your function should start like: \"f(x) = ...\"");
 
     var = input_string[2];
-    counter = 0;
 
     if (var == 'e' || var == '+' || var == '-' || var == '*' || var == '/' || var == '^' || var == '%' || var == '(' || var == ')' || var == '|' || var == '.' || var == ';' || isdigit(var))
         return err(PARSER, "\"+\", \"-\", \"*\", \"/\", \"^\", \"%\", \"(\", \")\", \"|\", \"e\", \".\", \";\" and 0-9 digits cannot be used as variable name.");
@@ -55,18 +55,19 @@ bool lex(char input_string[], token formula[])
         else if (input_string[i] == '/' && OP_CONDITION(previous_token)) current_token = keywords[T_DIV];
         else if (input_string[i] == '%' && OP_CONDITION(previous_token)) current_token = keywords[T_MOD];
         else if (input_string[i] == '^' && OP_CONDITION(previous_token)) current_token = keywords[T_POW];
-        else if (input_string[i] == ')' && OP_CONDITION(previous_token)) current_token = keywords[T_CBRACK];
-        else if (input_string[i] == '-' && (previous_token.name == OBRACK || previous_token.type == TT_OPERATOR || previous_token.type == TT_NULL)) {
+        else if (input_string[i] == ')' && OP_CONDITION(previous_token)) {
+            if (depth == 0) return err(PARSER, "invalid formula. (2)");
+            current_token = keywords[T_CBRACK];
+            depth--;
+        } else if (input_string[i] == '-' && (previous_token.name == OBRACK || previous_token.type == TT_OPERATOR || previous_token.type == TT_NULL)) {
             current_token = keywords[T_NEG];
         } else if (isalpha(input_string[i]) || input_string[i] == var) {
 
             if (!isalpha(var)) current_token = keywords[T_VAR_X];
             int type = determine_type(input_string, i, var);
 
-            if (type > 0)
-                current_token = keywords[type];
-            else
-                return err(PARSER, "invalid formula. (2)");
+            if (type > 0) current_token = keywords[type];
+            else return err(PARSER, "invalid formula. (3)");
 
             if ((current_token.type == TT_VARIABLE || current_token.type == TT_FUNCTION) && OP_CONDITION(previous_token)) {
                 formula[f_index] = keywords[T_MUL];
@@ -84,14 +85,24 @@ bool lex(char input_string[], token formula[])
                 case T_SQRT: i += 3; break;
             }
         } else if (input_string[i] == '|') {
-            if (previous_token.type == TT_OPERATOR || previous_token.name == FUNC_NEG || previous_token.name == OBRACK || previous_token.type == TT_NULL)
-                current_token = keywords[T_ABS];
-            else if (OP_CONDITION(previous_token))
-                current_token = keywords[T_CBRACK];
-            else
-                return err(PARSER, "invalid absolute function notation (|x|).");
+            if (previous_token.type == TT_OPERATOR || previous_token.name == FUNC_NEG || previous_token.name == OBRACK || previous_token.type == TT_NULL) {
+                current_token = keywords[T_OBRACK];
+                formula[f_index] = keywords[T_ABS];
+                f_index++;
+                depth++;
+                push((token){ 0, 0, 0, depth}, &abs_stack);
+            } else if (OP_CONDITION(previous_token)) {
+                if (abs_stack.top == -1 || depth != abs_stack.s[abs_stack.top].presedence)
+                    return err(PARSER, "invalid absolute function notation (|x|).");
+                else {
+                    current_token = keywords[T_CBRACK];
+                    pop(&abs_stack);
+                    depth--;
+                }
+            } else return err(PARSER, "invalid absolute function notation (|x|).");
         } else if (input_string[i] == '(') {
             current_token = keywords[T_OBRACK];
+            depth++;
 
             if (OP_CONDITION(previous_token)) {
                 formula[f_index] = keywords[T_MUL];
@@ -100,31 +111,19 @@ bool lex(char input_string[], token formula[])
         } else if (input_string[i] == ';' && OP_CONDITION(previous_token) && input_string[i + 1] == '\0') {
             current_token = keywords[T_TERMINAL];
         } else {
-            return err(PARSER, "invalid formula. (3)");
+            return err(PARSER, "invalid formula. (4)");
         }
 
-        if (input_string[i + 1] == '\0' && input_string[i] != ';') err(PARSER, "your function should end with a semicolon (;).");
+        if (input_string[i + 1] == '\0' && input_string[i] != ';') return err(PARSER, "your function should end with a semicolon (;).");
 
         previous_token = keywords[T_NULL];
         previous_token = current_token;
         formula[f_index] = current_token;
         f_index++;
-
-        if (current_token.name == FUNC_ABS)
-        {
-            formula[f_index] = keywords[T_OBRACK];
-            previous_token = keywords[T_OBRACK];
-            f_index++;
-        }
     }
 
-    for (i = 0; formula[i].type != TT_TERMINAL; i++)
-    {
-        if (formula[i].name == OBRACK) counter++;
-        if (formula[i].name == CBRACK) counter2++;
-    }
-
-    if (counter != counter2) return err(PARSER, "mismatched brackets.");
+    if (abs_stack.top != -1) return err(PARSER, "invalid absolute function notation (|x|).");
+    if (depth != 0) return err(PARSER, "mismatched brackets.");
 
     return true;
 }

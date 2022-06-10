@@ -24,7 +24,9 @@ void to_postfix_notation(token formula[])
             pop(&stack);
         } else if (formula[i].type == TT_OPERATOR || formula[i].type == TT_FUNCTION) {
             if (stack.top != -1) {
-                if (formula[i].presedence > stack.s[stack.top].presedence)
+                if (formula[i].name == OP_POW && stack.s[stack.top].name == OP_POW) {
+                    push(formula[i], &stack);
+                } else if (formula[i].presedence > stack.s[stack.top].presedence)
                     push(formula[i], &stack);
                 else {
                     //this doesn't work as expected, hence the last +1

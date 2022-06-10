@@ -17,7 +17,7 @@ void plot()
 
         while (!done)
         {
-            if (!drawn) { // There's a memory leak in draw_numbers() so it should be called only once
+            if (!drawn) { // do it only once
                 // Clear and draw the screen (gives a clean, black canvas)
                 SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
                 SDL_RenderClear(renderer);
@@ -37,17 +37,17 @@ void plot()
                 SDL_RenderDrawLine(renderer, 0, 300, 1000, 300);
 
                 draw_numbers();
+
+                SDL_SetRenderDrawColor(renderer, 50, 255, 255, SDL_ALPHA_OPAQUE);
+                draw_graph();
+
                 drawn = true;
             }
-            
-            SDL_SetRenderDrawColor(renderer, 50, 255, 255, SDL_ALPHA_OPAQUE);
-            draw_graph();
 
             SDL_RenderPresent(renderer);
             SDL_Delay(10); // Comment this if you feel like cooking your meal on your graphics card
 
-            while (SDL_PollEvent(&e) != 0)
-                if (e.type == SDL_QUIT) done = true;
+            while (SDL_PollEvent(&e) != 0) if (e.type == SDL_QUIT) done = true;
         }
     }
 
@@ -63,33 +63,33 @@ void plot()
     on the window surface. every 50 pixels are considered 1 arithmetic unit.
     Calculate the f value every iteration, with the resulting coordinates draw a line from previous point
     to the current, and save the current point for next iteration. for any value if the function
-    is undefined, contiuous is set to false, so that at the next defined point we don't draw a line
+    is undefined, continuity is set to false, so that at the next defined point we don't draw a line
     from previously valid points to current, since the function is undefined in between the two.
 */
 void draw_graph()
 {
     point previous, current;
-    bool continuous = false;
+    bool continuity = false;
     int j = 0; // for pixels across x-axis of the window
 
     for (double i = -10; i <= 10; i+=0.02)
     {
         token result = calculate_for(i, false);
         if (result.type != TT_NULL) {
-            if (result.value < 6 || result.value > -6) {
+            if (result.value < 6 && result.value > -6) {
                 current.x = j;
 
                 if (result.value > 0) current.y = 300 - fabs(result.value) / 0.02;
                 else current.y = 300 + fabs(result.value) / 0.02;
 
-                if (continuous) SDL_RenderDrawLine(renderer, previous.x, previous.y, current.x, current.y);
+                if (continuity) SDL_RenderDrawLine(renderer, previous.x, previous.y, current.x, current.y);
                 previous = current;
-                continuous = true;
+                continuity = true;
             } else {
-                continuous = false;
+                continuity = false;
             }
         } else {
-            continuous = false;
+            continuity = false;
         }
 
         j++;

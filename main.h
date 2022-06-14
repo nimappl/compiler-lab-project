@@ -71,7 +71,7 @@ extern char var;
 
 void push(token, tstack *);
 token pop(tstack *);
-bool lex(char input_string[], token formula[]);
+bool lex(char input_string[]);
 bool err(int, char *);
 bool is_valid_number(char []);
 int determine_type(char input[], int index, int var);
@@ -79,7 +79,6 @@ void to_postfix_notation(token formula[]);
 bool is_mathematically_valid();
 token calculate_for(double value, bool verbose);
 token calculate(token operation, double operand1, double operand2, bool verbose);
-void print_expr(token expr[]);
 void plot();
 void draw_graph();
 void draw_numbers();

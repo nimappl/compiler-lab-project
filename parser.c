@@ -8,11 +8,11 @@ char var;
     based on previously identified token. input will be parsed into a array of type token for
     further processing, if the input is syntactically valid.
 */
-bool lex(char input_string[], token formula[])
+bool lex(char input_string[])
 {
     int i, f_index = 0, depth = 0;
     char temp[20];
-    token previous_token = keywords[T_NULL];
+    token previous_token = keywords[T_NULL], formula[200];
     tstack abs_stack;
     abs_stack.top = -1;
 
@@ -125,6 +125,7 @@ bool lex(char input_string[], token formula[])
     if (abs_stack.top != -1) return err(PARSER, "invalid absolute function notation (|x|).");
     if (depth != 0) return err(PARSER, "mismatched brackets.");
 
+    to_postfix_notation(formula);
     return true;
 }
 

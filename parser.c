@@ -79,6 +79,10 @@ bool lex(char input_string[])
                 case T_SIN: case T_COS: case T_TAN: case T_COT: case T_SEC: case T_CSC: case T_LOG:
                 i += 2; break;
 
+                case T_ARCSIN: case T_ARCCOS: case T_ARCTAN: case T_ARCCOT: case T_ARCSEC: case T_ARCCSC:
+                i += 5;
+                break;
+
                 case T_VAR_PI: case T_LN:
                 i++; break;
 
@@ -144,11 +148,12 @@ bool is_valid_number(char s[])
 int determine_type(char input[], int index, int xvar)
 {
     int i;
-    char s3[6], s4[6], s5[6];
+    char s3[6], s4[6], s5[6], s7[8];
 
     for (i = 0; i < 3; i++) s3[i] = input[index + i]; s3[i] = '\0';
     for (i = 0; i < 4; i++) s4[i] = input[index + i]; s4[i] = '\0';
     for (i = 0; i < 5; i++) s5[i] = input[index + i]; s5[i] = '\0';
+    for (i = 0; i < 7; i++) s7[i] = input[index + i]; s7[i] = '\0';
 
     if (strcmp(s4, "sin(") == 0) return T_SIN;
     else if (strcmp(s4, "sec(") == 0) return T_SEC;
@@ -157,6 +162,12 @@ int determine_type(char input[], int index, int xvar)
     else if (strcmp(s4, "cot(") == 0) return T_COT;
     else if (strcmp(s4, "csc(") == 0) return T_CSC;
     else if (strcmp(s4, "tan(") == 0) return T_TAN;
+    else if (strcmp(s7, "arcsin(") == 0) return T_ARCSIN;
+    else if (strcmp(s7, "arccos(") == 0) return T_ARCCOS;
+    else if (strcmp(s7, "arctan(") == 0) return T_ARCTAN;
+    else if (strcmp(s7, "arccot(") == 0) return T_ARCCOT;
+    else if (strcmp(s7, "arcsec(") == 0) return T_ARCSEC;
+    else if (strcmp(s7, "arccsc(") == 0) return T_ARCCSC;
     else if (strcmp(s3, "ln(") == 0) return T_LN;
     else if (strcmp(s4, "log(") == 0) return T_LOG;
     else if (input[index] == 'p') {

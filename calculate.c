@@ -148,7 +148,7 @@ token calculate(token operation, double operand1, double operand2, bool verbose)
             case OP_SUB: result.value = operand1 - operand2; break;
             case OP_MUL: result.value = operand1 * operand2; break;
             case OP_DIV:
-                if ((float)operand2 == 0) {
+                if (operand2 == 0) {
                     if (verbose) err(CALCULATOR, "division by 0.");
                     result = vague;
                 } else result.value = operand1 / operand2;
@@ -193,6 +193,39 @@ token calculate(token operation, double operand1, double operand2, bool verbose)
                     if (verbose) err(CALCULATOR, "Cosecant is infinity for given value.");
                     result = vague;
                 } else result.value = 1 / sin(operand1);
+                break;
+            case FUNC_ARCSIN:
+                if (operand1 > 1 || operand1 < -1) {
+                    if (verbose) err(CALCULATOR, "given value is out of domain of inverse sine.");
+                    result = vague;
+                } else result.value = asin(operand1);
+                break;
+            case FUNC_ARCCOS:
+            if (operand1 > 1 || operand1 < -1) {
+                    if (verbose) err(CALCULATOR, "given value is out of domain of inverse cosine.");
+                    result = vague;
+                } else result.value = acos(operand1);
+                break;
+            case FUNC_ARCTAN:
+                result.value = atan(operand1);
+                break;
+            case FUNC_ARCCOT:
+                if (operand1 == 0) {
+                    if (verbose) err(CALCULATOR, "given value is out of domain of inverse cotangent.");
+                    result = vague;
+                } else result.value = atan(1 / operand1);
+                break;
+            case FUNC_ARCSEC:
+                if (operand1 == 0) {
+                    if (verbose) err(CALCULATOR, "given value is out of domain of inverse secant.");
+                    result = vague;
+                } else result.value = acos(1 / operand1);
+                break;
+            case FUNC_ARCCSC:
+                if (operand1 == 0) {
+                    if (verbose) err(CALCULATOR, "given value is out of domain of inverse cosecant.");
+                    result = vague;
+                } result.value = asin(1 / operand1);
                 break;
             case FUNC_LN:
                 if (operand1 <= 0) {
